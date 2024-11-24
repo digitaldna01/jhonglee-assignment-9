@@ -122,18 +122,13 @@ def update(frame, mlp, ax_input, ax_hidden, ax_gradient, X, y):
         
     # TODO: Plot hidden features hidden space 1, 2, 3 다 그렸어
     hidden_features = mlp.a1 
-    ax_hidden.scatter(hidden_features[:, 0], hidden_features[:, 1], hidden_features[:, 2], c=y.ravel(), cmap='bwr', alpha=0.7)
-    ax_hidden.set_title(f"Hidden Space at Step {frame * 10}")
-    ax_hidden.set_xlabel("Transformed Feature 1")
-    ax_hidden.set_ylabel("Transformed Feature 2")
-    ax_hidden.set_zlabel("Hidden Feature 3")
     
     # TODO: Hyperplane visualization in the hidden space
     x_min, x_max = hidden_features[:, 0].min()-0.5, hidden_features[:, 0].max() +0.5
     y_min, y_max = hidden_features[:, 1].min()-0.5, hidden_features[:, 1].max() +0.5
     xx, yy = np.meshgrid(np.linspace(x_min, x_max, 100), np.linspace(y_min, y_max, 100))
     Z = -(mlp.W2[0, 0] * xx + mlp.W2[1, 0] * yy + mlp.B2[0]) / mlp.W2[2, 0]
-    ax_hidden.plot_surface(xx, yy, Z, color='green', alpha=0.5)  # 초평면을 반투명하게 설정
+    ax_hidden.plot_surface(xx, yy, Z, color='green', alpha=0.7)  # 초평면을 반투명하게 설정
 
     # # TODO: Distorted input space transformed by the hidden layer
     xx = np.linspace(X[:, 0].min(), X[:, 0].max(), 100)
@@ -142,11 +137,16 @@ def update(frame, mlp, ax_input, ax_hidden, ax_gradient, X, y):
     g_points = np.c_[X_g.ravel(), Y_g.ravel()]
     
     hidden_transformed = mlp.activate(np.dot(g_points, mlp.W1) + mlp.B1)
-    ax_hidden.scatter(hidden_transformed[:, 0], hidden_transformed[:, 1], hidden_transformed[:,2], c='lightblue', alpha=0.1, linewidth=0.2)
+    ax_hidden.plot_trisurf(hidden_transformed[:, 0], hidden_transformed[:, 1], hidden_transformed[:,2], color='lightblue', alpha=0.5, linewidth=0.2)
 
-    ax_hidden.set_xlim(-1.5, 1.5)
-    ax_hidden.set_ylim(-1.5, 1.5)
-    ax_hidden.set_zlim(-1.5, 1.5)
+    ax_hidden.scatter(hidden_features[:, 0], hidden_features[:, 1], hidden_features[:, 2], c=y.ravel(), cmap='bwr', alpha=1)
+    ax_hidden.set_title(f"Hidden Space at Step {frame * 10}")
+    ax_hidden.set_xlabel("Transformed Feature 1")
+    ax_hidden.set_ylabel("Transformed Feature 2")
+    ax_hidden.set_zlabel("Hidden Feature 3")
+    # ax_hidden.set_xlim(-1.5, 1.5)
+    # ax_hidden.set_ylim(-1.5, 1.5)
+    # ax_hidden.set_zlim(-1.5, 1.5)
 
     # # TODO: Plot input layer decision boundary
     ax_input.scatter(X[:, 0], X[:, 1], c=y.ravel(), cmap='bwr', alpha=1, edgecolor='k')
@@ -222,7 +222,6 @@ def visualize(activation, lr, step_num):
 
 if __name__ == "__main__":
     activation = "tanh"
-    # activation = "sigmoid"
     lr = 0.1
     step_num = 1000
     visualize(activation, lr, step_num)
