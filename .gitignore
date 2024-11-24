@@ -11,7 +11,9 @@ logs
 npm-debug.log*
 
 # Environment variables
-.venv
+/venv
+
+/__pycache__
 
 # OS generated files
 .DS_Store
@@ -19,3 +21,4 @@ Thumbs.db
 
 # img file
 *.png
+*.gif
